@@ -221,6 +221,123 @@ const EXEMPLES=[
   {raison:'BOULANGERIE PAUL & FILS',siret:'41235678900023',adresse:'8 rue du Four, 69001 Lyon',responsable:'PAUL Henri',tel:'04 72 11 22 33',tel2:'',intitule:'Hygiène alimentaire HACCP',heures:'14 Heures',horaires:'8h30-12h30 / 13h30-17h30',public:'Personnel de production',materiel:'Supports PDF, fiches pratiques',dates:['2026-06-03','2026-06-04'],stagiaires:[{prenom:'Sophie',nom:'BERNARD'},{prenom:'Romain',nom:'CHEVALIER'},{prenom:'Amina',nom:'SLIMANI'}],fo_nom:'Mme LEFORT',fo_siret:'82345678900011',fo_nda:'1169012 4521',fo_cout:'850,00',fo_date:'2026-05-10'},
   {raison:'GARAGE AUTOMOTO 37',siret:'55678901200045',adresse:'42 avenue de la Tranchée, 37100 Tours',responsable:'GARCIA Pedro',tel:'02 47 88 90 12',tel2:'06 12 34 56 78',intitule:'Habilitation électrique B1V BR BC',heures:'21 Heures',horaires:'8h00-12h00 / 13h00-17h00',public:'Techniciens et mécaniciens',materiel:'Bancs d\'essai, consignations, EPI',dates:['2026-06-10','2026-06-11','2026-06-12'],stagiaires:[{prenom:'Julien',nom:'PETIT'},{prenom:'Marc',nom:'LEBRUN'}],fo_nom:'M. SANTOS',fo_siret:'76543210000099',fo_nda:'4453019 8812',fo_cout:'1200,00',fo_date:'2026-05-20'},
   {raison:'CLINIQUE SAINT-LUC',siret:'30012345600078',adresse:'21 boulevard Pasteur, 44000 Nantes',responsable:'Dr MOREAU Claire',tel:'02 40 55 66 77',tel2:'',intitule:'Gestion du stress et prévention des RPS',heures:'7 Heures',horaires:'9h00-17h00',public:'Infirmiers et aides-soignants',materiel:'Supports PowerPoint, exercices pratiques',dates:['2026-07-01'],stagiaires:[{prenom:'Inès',nom:'FONTAINE'},{prenom:'Thomas',nom:'RICHARD'},{prenom:'Céline',nom:'MOULIN'},{prenom:'David',nom:'HENRY'}],fo_nom:'Mme AUBERT',fo_siret:'65432198700032',fo_nda:'5244013 7623',fo_cout:'550,00',fo_date:'2026-06-05'},
+  {raison:'ÉCOLE PRIMAIRE LES LILAS',siret:'21345678900056',adresse:'3 impasse des Roses, 13008 Marseille',responsable:'DUP.doc-checkbox.checked{background:#1a5fa8;}
+
+@media print{
+  #app-shell{display:none!important;}
+  #doc-view{display:block!important;position:static;height:auto;overflow:visible;}
+  #doc-toolbar{display:none!important;}
+  #doc-body .page-break{page-break-after:always;border:none;margin:0;padding:0;}
+  .sig-actions{display:none!important;}
+}
+</style>
+</head>
+<body>
+<div id="app-shell">
+<header>
+  <div>
+    <div class="logo">Forma<span>Net</span></div>
+    <div class="subtitle">Générateur Complet de Dossier Formation</div>
+  </div>
+  <div class="badge">✦ Dossier administratif complet</div>
+</header>
+<div class="container">
+  <div class="steps">
+    <div class="step active" onclick="goTo(0)"><span class="num">1</span>Client</div>
+    <div class="step" onclick="goTo(1)"><span class="num">2</span>Formation</div>
+    <div class="step" onclick="goTo(2)"><span class="num">3</span>Formateur</div>
+    <div class="step" onclick="goTo(3)"><span class="num">4</span>Documents</div>
+  </div>
+
+  <!-- ÉTAPE 1 : CLIENT -->
+  <div class="page-section active" id="step-0">
+    <div class="card">
+      <h2>🏢 Coordonnées du client</h2>
+      <div class="row"><div class="field"><label>Raison sociale *</label><input id="c_raison" type="text" placeholder="Ex : AFRIMART EXOTIQUES"></div><div class="field"><label>SIRET</label><input id="c_siret" type="text" placeholder="Ex : 81961445400018"></div></div>
+      <div class="row full"><div class="field"><label>Adresse complète *</label><input id="c_adresse" type="text" placeholder="Ex : 15 VC Marchande Stendhal Galerie Marchande, 37000 Tours"></div></div>
+      <div class="row tri">
+        <div class="field"><label>Nom du responsable *</label><input id="c_responsable" type="text" placeholder="Ex : DAVIES Mamie"></div>
+        <div class="field"><label>Téléphone</label><input id="c_tel" type="text" placeholder="Ex : 02 34 36 42 94"></div>
+        <div class="field"><label>Téléphone 2</label><input id="c_tel2" type="text" placeholder="Ex : 07 53 04 20 17"></div>
+      </div>
+    </div>
+    <div class="btn-actions"><button class="btn-primary" onclick="goTo(1)">Suivant →</button></div>
+  </div>
+
+  <!-- ÉTAPE 2 : FORMATION -->
+  <div class="page-section" id="step-1">
+    <div class="card">
+      <h2>📋 Détails de la formation</h2>
+      <div class="row"><div class="field"><label>Intitulé *</label><input id="f_intitule" type="text" placeholder="Ex : Initiation aux gestes de Premiers secours"></div><div class="field"><label>Lieu *</label><select id="f_lieu"><option>Intra-Entreprise</option><option>Inter (centre de formation)</option><option>À distance (visioconférence)</option></select></div></div>
+      <div class="row"><div class="field"><label>Nombre d'heures *</label><input id="f_heures" type="text" placeholder="Ex : 7 heures"></div><div class="field"><label>Horaires</label><input id="f_horaires" type="text" placeholder="Ex : 9h00-12h00 / 13h00-17h00"></div></div>
+      <div class="row full"><div class="field"><label>Public cible</label><input id="f_public" type="text" placeholder="Ex : Tout public, personnel de l'entreprise..."></div></div>
+      <div class="row full"><div class="field"><label>Matériel fourni par le formateur (si besoin)</label><input id="f_materiel" type="text" placeholder="Ex : Mannequins, défibrillateur de formation, supports PDF..."></div></div>
+      <div class="field" style="margin-bottom:16px;"><label>Dates *</label><div class="dates-block" id="dates-container"></div><div class="add-date-row"><input type="date" id="new-date"><button onclick="addDate()">+ Ajouter</button></div></div>
+      <label style="display:block;margin-bottom:10px;font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Salariés à former</label>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:10px;font-style:italic;">Si les noms sont inconnus, laissez vide : ils seront mentionnés "sur les attestations de présence".</p>
+      <div id="stagiaires-container"></div>
+      <button class="btn-add" onclick="addStagiaire()">+ Ajouter un stagiaire</button>
+    </div>
+    <div class="btn-actions"><button class="btn-secondary" onclick="goTo(0)">← Retour</button><button class="btn-primary" onclick="goTo(2)">Suivant →</button></div>
+  </div>
+
+  <!-- ÉTAPE 3 : FORMATEUR -->
+  <div class="page-section" id="step-2">
+    <div class="card">
+      <h2>👤 Informations formateur / sous-traitant</h2>
+      <div class="row"><div class="field"><label>Nom complet *</label><input id="fo_nom" type="text" placeholder="Ex : M. ROGER"></div><div class="field"><label>SIRET</label><input id="fo_siret" type="text" placeholder="Ex : 97882245000018"></div></div>
+      <div class="row tri">
+        <div class="field"><label>N° Déclaration d'activité</label><input id="fo_nda" type="text" placeholder="Ex : 5253011 0853"></div>
+        <div class="field"><label>Coût net (€)</label><input id="fo_cout" type="text" placeholder="Ex : 400,00"></div>
+        <div class="field"><label>Date de signature contrat</label><input id="fo_date_contrat" type="date"></div>
+      </div>
+    </div>
+    <div class="btn-actions"><button class="btn-secondary" onclick="goTo(1)">← Retour</button><button class="btn-primary" onclick="goTo(3)">Générer les documents →</button></div>
+  </div>
+
+  <!-- ÉTAPE 4 : DOCUMENTS -->
+  <div class="page-section" id="step-3">
+    <div class="card">
+      <h2>✅ Dossier prêt</h2>
+      <div class="summary-grid" id="summary-box"></div>
+      <div style="background:#fff8e1;border:1.5px solid #ffc107;border-radius:10px;padding:14px 18px;margin-bottom:18px;font-size:13px;">
+        <strong>✍️ Documents interactifs :</strong> Dans chaque document, dessinez votre signature à la souris ou au doigt, et remplissez les champs éditables. Puis imprimez avec Ctrl+P.
+      </div>
+      <div class="docs-grid" id="docs-list"></div>
+      <button class="btn-print-all" onclick="viewAll()">👁️ Voir le dossier complet (tous documents)</button>
+      <button onclick="viewAll();setTimeout(()=>window.print(),800)" style="background:#e8430a;color:white;border:none;border-radius:9px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif;width:100%;margin-top:12px;box-shadow:0 4px 16px rgba(232,67,10,.35);">🖨️ Imprimer / Enregistrer en PDF</button>
+      <div style="background:#fff8e1;border:1.5px solid #ffc107;border-radius:10px;padding:12px 16px;margin-top:12px;font-size:13px;line-height:1.7;">
+        <strong>📱 Sur Android :</strong> Ce bouton ouvre le dossier complet puis le dialogue d'impression.<br>
+        Appuyez sur <strong>⋮ → Imprimer → Enregistrer en PDF</strong> pour sauvegarder.
+      </div>
+    </div>
+    <div class="btn-actions"><button class="btn-secondary" onclick="goTo(2)">← Modifier</button></div>
+  </div>
+</div>
+</div>
+
+<button class="btn-exemple-fixe" onclick="remplirExemple()">💡 Exemple aléatoire</button>
+
+<div id="doc-view">
+  <div id="doc-toolbar">
+    <span id="doc-title-bar">📄 FormaNet – Document interactif</span>
+    <div class="toolbar-btns">
+      <button class="btn-clear-sigs" onclick="clearAllSigs()">🗑️ Effacer signatures</button>
+      <button class="btn-print-doc" onclick="window.print()">🖨️ Imprimer</button>
+      <button class="btn-close-doc" onclick="closeDoc()">✕ Fermer</button>
+    </div>
+  </div>
+  <div id="doc-body"></div>
+</div>
+
+<script>
+let stagiaires=[],dates=[],sidx=0;
+
+const EXEMPLES=[
+  {raison:'AFRIMART EXOTIQUES',siret:'',adresse:'15 VC Marchande Stendhal Galerie Marchande, 37000 Tours',responsable:'DAVIES Mamie',tel:'02 34 36 42 94',tel2:'07 53 04 20 17',intitule:'Initiation aux gestes de Premiers secours',heures:'7 Heures',horaires:'9h00-12h00 / 13h00-17h00',public:'Tout le personnel',materiel:'Mannequins, défibrillateur de formation, supports PDF',dates:['2026-05-26'],stagiaires:[{prenom:'Lucie',nom:'MARTIN'},{prenom:'Kevin',nom:'DUPONT'}],fo_nom:'M. ROGER',fo_siret:'97882245000018',fo_nda:'5253011 0853',fo_cout:'400,00',fo_date:'2026-04-24'},
+  {raison:'BOULANGERIE PAUL & FILS',siret:'41235678900023',adresse:'8 rue du Four, 69001 Lyon',responsable:'PAUL Henri',tel:'04 72 11 22 33',tel2:'',intitule:'Hygiène alimentaire HACCP',heures:'14 Heures',horaires:'8h30-12h30 / 13h30-17h30',public:'Personnel de production',materiel:'Supports PDF, fiches pratiques',dates:['2026-06-03','2026-06-04'],stagiaires:[{prenom:'Sophie',nom:'BERNARD'},{prenom:'Romain',nom:'CHEVALIER'},{prenom:'Amina',nom:'SLIMANI'}],fo_nom:'Mme LEFORT',fo_siret:'82345678900011',fo_nda:'1169012 4521',fo_cout:'850,00',fo_date:'2026-05-10'},
+  {raison:'GARAGE AUTOMOTO 37',siret:'55678901200045',adresse:'42 avenue de la Tranchée, 37100 Tours',responsable:'GARCIA Pedro',tel:'02 47 88 90 12',tel2:'06 12 34 56 78',intitule:'Habilitation électrique B1V BR BC',heures:'21 Heures',horaires:'8h00-12h00 / 13h00-17h00',public:'Techniciens et mécaniciens',materiel:'Bancs d\'essai, consignations, EPI',dates:['2026-06-10','2026-06-11','2026-06-12'],stagiaires:[{prenom:'Julien',nom:'PETIT'},{prenom:'Marc',nom:'LEBRUN'}],fo_nom:'M. SANTOS',fo_siret:'76543210000099',fo_nda:'4453019 8812',fo_cout:'1200,00',fo_date:'2026-05-20'},
+  {raison:'CLINIQUE SAINT-LUC',siret:'30012345600078',adresse:'21 boulevard Pasteur, 44000 Nantes',responsable:'Dr MOREAU Claire',tel:'02 40 55 66 77',tel2:'',intitule:'Gestion du stress et prévention des RPS',heures:'7 Heures',horaires:'9h00-17h00',public:'Infirmiers et aides-soignants',materiel:'Supports PowerPoint, exercices pratiques',dates:['2026-07-01'],stagiaires:[{prenom:'Inès',nom:'FONTAINE'},{prenom:'Thomas',nom:'RICHARD'},{prenom:'Céline',nom:'MOULIN'},{prenom:'David',nom:'HENRY'}],fo_nom:'Mme AUBERT',fo_siret:'65432198700032',fo_nda:'5244013 7623',fo_cout:'550,00',fo_date:'2026-06-05'},
   {raison:'ÉCOLE PRIMAIRE LES LILAS',siret:'21345678900056',adresse:'3 impasse des Roses, 13008 Marseille',responsable:'DUP  document.getElementById('c_raison').value=e.raison;
   document.getElementById('c_siret').value=e.siret;
   document.getElementById('c_adresse').value=e.adresse;
