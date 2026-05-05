@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FormaNet – Demande de Formation</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Arial,sans-serif;background:#eef2f8;min-height:100vh;}
+header{background:#1a5fa8;color:white;padding:20px 24px;text-align:center;}
+header h1{font-size:22px;letter-spacing:.03em;}
+header p{font-size:13px;opacity:.8;margin-top:4px;}
+.container{max-width:600px;margin:0 auto;padding:24px 16px 60px;}
+.card{background:white;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.07);padding:24px 20px;margin-bottom:16px;}
+.card h2{color:#1a5fa8;font-size:15px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid #e8f0fb;display:flex;align-items:center;gap:8px;}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+label{font-size:12px;font-weight:700;color:#7a8499;text-transform:uppercase;letter-spacing:.06em;}
+input,textarea,select{border:1.5px solid #d0daea;border-radius:8px;padding:11px 14px;font-size:15px;color:#2c2c3e;background:#f5f7fa;font-family:Arial,sans-serif;outline:none;-webkit-appearance:none;}
+input:focus,textarea:focus,select:focus{border-color:#1a5fa8;background:white;}
+textarea{resize:vertical;min-height:70px;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.stagiaire{background:#e8f0fb;border-radius:8px;padding:12px 14px;margin-bottom:10px;position:relative;}
+.stagiaire h4{font-size:12px;font-weight:700;color:#1a5fa8;text-transform:uppercase;margin-bottom:10px;}
+.btn-remove{position:absolute;top:10px;right:12px;background:none;border:none;color:#c0392b;font-size:20px;cursor:pointer;line-height:1;}
+.btn-add{background:#e8f0fb;border:2px dashed #2d7dd2;color:#1a5fa8;border-radius:8px;padding:11px;cursor:pointer;font-size:14px;font-weight:700;width:100%;font-family:Arial,sans-serif;}
+.dates-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
+.date-tag{background:#1a5fa8;color:white;border-radius:20px;padding:5px 14px;font-size:13px;display:flex;align-items:center;gap:8px;}
+.date-tag button{background:none;border:none;color:white;cursor:pointer;font-size:15px;}
+.add-date{display:flex;gap:8px;}
+.add-date input{flex:1;}
+.add-date button{background:#1a5fa8;color:white;border:none;border-radius:8px;padding:11px 16px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:Arial,sans-serif;}
+.btn-send{background:#1a5fa8;color:white;border:none;border-radius:10px;padding:16px;font-size:17px;font-weight:700;width:100%;cursor:pointer;font-family:Arial,sans-serif;margin-top:8px;box-shadow:0 4px 16px rgba(26,95,168,.35);}
+.btn-send:disabled{opacity:.5;cursor:not-allowed;}
+#status{text-align:center;font-size:14px;margin-top:14px;min-height:20px;font-weight:700;}
+.ok{color:#1a8a5a;} .err{color:#c0392b;}
+.required{color:#e8430a;}
+.hint{font-size:12px;color:#999;font-style:italic;margin-top:-10px;margin-bottom:10px;}
+</style>
+</head>
+<body>
+<header>
+  <h1>📋 FormaNet – Demande de Formation</h1>
+  <p>Remplissez ce formulaire et envoyez-le en un clic</p>
+</header>
+<div class="container">
+
+  <div class="card">
+    <h2>🏢 Votre entreprise</h2>
+    <div class="field"><label>Raison sociale <span class="required">*</span></label><input id="c_raison" type="text" placeholder="Ex : BOULANGERIE PAUL & FILS"></div>
+    <div class="field"><label>SIRET</label><input id="c_siret" type="text" placeholder="Ex : 41235678900023" inputmode="numeric"></div>
+    <div class="field"><label>Adresse complète <span class="required">*</span></label><input id="c_adresse" type="text" placeholder="Ex : 8 rue du Four, 69001 Lyon"></div>
+    <div class="row2">
+      <div class="field"><label>Nom du responsable <span class="required">*</span></label><input id="c_responsable" type="text" placeholder="Nom Prénom"></div>
+      <div class="field"><label>Téléphone <span class="required">*</span></label><input id="c_tel" type="tel" placeholder="Ex : 06 12 34 56 78"></div>
+    </div>
+    <div class="field"><label>Email <span class="required">*</span></label><input id="c_email" type="email" placeholder="contact@votreentreprise.fr"></div>
+  </div>
+
+  <div class="card">
+    <h2>📚 Formation souhaitée</h2>
+    <div class="field"><label>Intitulé de la formation <span class="required">*</span></label><input id="f_intitule" type="text" placeholder="Ex : Hygiène alimentaire HACCP"></div>
+    <div class="row2">
+      <div class="field"><label>Lieu souhaité</label>
+        <select id="f_lieu">
+          <option>Intra-Entreprise</option>
+          <option>Inter (centre de formation)</option>
+          <option>À distance (visioconférence)</option>
+        </select>
+      </div>
+      <div class="field"><label>Nombre d'heures</label><input id="f_heures" type="text" placeholder="Ex : 7 heures"></div>
+    </div>
+    <div class="field"><label>Date(s) souhaitée(s) <span class="required">*</span></label>
+      <div class="dates-wrap" id="dates-wrap"></div>
+      <div class="add-date"><input type="date" id="new-date"><button onclick="addDate()">+ Ajouter</button></div>
+    </div>
+    <div class="field" style="margin-top:12px;"><label>Horaires souhaités</label><input id="f_horaires" type="text" placeholder="Ex : 9h00-17h00"></div>
+    <div class="field"><label>Public cible</label><input id="f_public" type="text" placeholder="Ex : Tout le personnel, équipe technique..."></div>
+    <div class="field"><label>Informations complémentaires</label><textarea id="f_info" placeholder="Précisez vos attentes, contraintes particulières, accessibilité PSH..."></textarea></div>
+  </div>
+
+  <div class="card">
+    <h2>👥 Salariés à former</h2>
+    <p class="hint">Laissez vide si les noms ne sont pas encore connus.</p>
+    <div id="stagiaires"></div>
+    <button class="btn-add" onclick="addStagiaire()">+ Ajouter un salarié</button>
+  </div>
+
+  <button class="btn-send" id="btn-send" onclick="envoyer()">📨 Envoyer ma demande à FormaNet</button>
+  <div id="status"></div>
+
+  <p style="text-align:center;font-size:11px;color:#aaa;margin-top:20px;">FormaNet · 54 Avenue Philippe Auguste 75011 Paris · formanet.fr</p>
+  <button onclick="exemple()" style="display:block;margin:12px auto 0;background:#f59e0b;color:white;border:none;border-radius:50px;padding:13px 28px;font-size:15px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;box-shadow:0 4px 16px rgba(245,158,11,.4);">💡 Exemple aléatoire</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+const EXEMPLES=[
+  {raison:'AFRIMART EXOTIQUES',siret:'',adresse:'15 VC Marchande Stendhal, 37000 Tours',responsable:'DAVIES Mamie',tel:'02 34 36 42 94',email:'davies@afrimart.fr',intitule:'Initiation aux gestes de Premiers secours',lieu:'Intra-Entreprise',heures:'7 Heures',horaires:'9h00-12h00 / 13h00-17h00',public:'Tout le personnel',info:'Pas de contraintes particulières.',dates:['2026-05-26'],stagiaires:[['Lucie','MARTIN'],['Kevin','DUPONT']]},
+  {raison:'BOULANGERIE PAUL & FILS',siret:'41235678900023',adresse:'8 rue du Four, 69001 Lyon',responsable:'PAUL Henri',tel:'04 72 11 22 33',email:'h.paul@boulangerie-paul.fr',intitule:'Hygiène alimentaire HACCP',lieu:'Intra-Entreprise',heures:'14 Heures',horaires:'8h30-12h30 / 13h30-17h30',public:'Personnel de production',info:'Formation obligatoire, renouvellement annuel.',dates:['2026-06-03','2026-06-04'],stagiaires:[['Sophie','BERNARD'],['Romain','CHEVALIER'],['Amina','SLIMANI']]},
+  {raison:'GARAGE AUTOMOTO 37',siret:'55678901200045',adresse:'42 avenue de la Tranchée, 37100 Tours',responsable:'GARCIA Pedro',tel:'02 47 88 90 12',email:'contact@automoto37.fr',intitule:'Habilitation électrique B1V BR BC',lieu:'Intra-Entreprise',heures:'21 Heures',horaires:'8h00-12h00 / 13h00-17h00',public:'Techniciens et mécaniciens',info:'Prévoir EPI sur place.',dates:['2026-06-10','2026-06-11','2026-06-12'],stagiaires:[['Julien','PETIT'],['Marc','LEBRUN']]},
+  {raison:'CLINIQUE SAINT-LUC',siret:'30012345600078',adresse:'21 boulevard Pasteur, 44000 Nantes',responsable:'Dr MOREAU Claire',tel:'02 40 55 66 77',email:'c.moreau@clinique-saintluc.fr',intitule:'Gestion du stress et prévention des RPS',lieu:'Intra-Entreprise',heures:'7 Heures',horaires:'9h00-17h00',public:'Infirmiers et aides-soignants',info:'Salle disponible au 2ème étage.',dates:['2026-07-01'],stagiaires:[['Inès','FONTAINE'],['Thomas','RICHARD']]},
+  {raison:'ÉCOLE PRIMAIRE LES LILAS',siret:'21345678900056',adresse:'3 impasse des Roses, 13008 Marseille',responsable:'DUPUIS Nathalie',tel:'04 91 22 33 44',email:'direction@ecole-leslilas.fr',intitule:'Sensibilisation à la cybersécurité',lieu:'Intra-Entreprise',heures:'3h30',horaires:'14h00-17h30',public:'Enseignants et personnel administratif',info:'Vidéoprojecteur disponible sur place.',dates:['2026-06-17'],stagiaires:[['Paul','GIRARD'],['Marie','LECOMTE']]},
+];
+let dernierEx=-1;
+function exemple(){
+  let idx;do{idx=Math.floor(Math.random()*EXEMPLES.length);}while(idx===dernierEx&&EXEMPLES.length>1);
+  dernierEx=idx;const e=EXEMPLES[idx];
+  document.getElementById('c_raison').value=e.raison;
+  document.getElementById('c_siret').value=e.siret;
+  document.getElementById('c_adresse').value=e.adresse;
+  document.getElementById('c_responsable').value=e.responsable;
+  document.getElementById('c_tel').value=e.tel;
+  document.getElementById('c_email').value=e.email;
+  document.getElementById('f_intitule').value=e.intitule;
+  document.getElementById('f_lieu').value=e.lieu;
+  document.getElementById('f_heures').value=e.heures;
+  document.getElementById('f_horaires').value=e.horaires;
+  document.getElementById('f_public').value=e.public;
+  document.getElementById('f_info').value=e.info;
+  dates=[...e.dates];renderDates();
+  stagiaires=[];sidx=0;document.getElementById('stagiaires').innerHTML='';
+  e.stagiaires.forEach(([p,n])=>{addStagiaire();const id=sidx-1;document.getElementById('sp'+id).value=p;document.getElementById('sn'+id).value=n;});
+  const btn=document.querySelector('button[onclick="exemple()"]');
+  btn.textContent=`✅ ${e.raison}`;btn.style.background='#1a8a5a';
+  setTimeout(()=>{btn.textContent='💡 Exemple aléatoire';btn.style.background='#f59e0b';},2500);
+}
+
+let dates=[],stagiaires=[],sidx=0;
+
+function fmtDate(iso){if(!iso)return'';const[y,m,d]=iso.split('-');return`${d}/${m}/${y}`;}
+function addDate(){const v=document.getElementById('new-date').value;if(!v||dates.includes(v))return;dates.push(v);renderDates();document.getElementById('new-date').value='';}
+function removeDate(d){dates=dates.filter(x=>x!==d);renderDates();}
+function renderDates(){document.getElementById('dates-wrap').innerHTML=dates.map(d=>`<div class="date-tag">${fmtDate(d)}<button onclick="removeDate('${d}')">×</button></div>`).join('');}
+
+function addStagiaire(){
+  const id=sidx++;stagiaires.push({id});
+  const div=document.createElement('div');div.className='stagiaire';div.id='s'+id;
+  div.innerHTML=`<button class="btn-remove" onclick="removeStagiaire(${id})">×</button>
+    <h4>Salarié ${stagiaires.length}</h4>
+    <div class="row2">
+      <div class="field"><label>Prénom</label><input type="text" id="sp${id}" placeholder="Prénom"></div>
+      <div class="field"><label>Nom</label><input type="text" id="sn${id}" placeholder="NOM"></div>
+    </div>`;
+  document.getElementById('stagiaires').appendChild(div);
+}
+function removeStagiaire(id){stagiaires=stagiaires.filter(s=>s.id!==id);document.getElementById('s'+id)?.remove();renumStagiaires();}
+function renumStagiaires(){document.querySelectorAll('.stagiaire h4').forEach((h,i)=>h.textContent=`Salarié ${i+1}`);}
+
+function v(id){return(document.getElementById(id)||{}).value?.trim()||'';}
+
+async function envoyer(){
+  const raison=v('c_raison'),responsable=v('c_responsable'),tel=v('c_tel'),email=v('c_email'),intitule=v('f_intitule');
+  const st=document.getElementById('status'),btn=document.getElementById('btn-send');
+  if(!raison||!responsable||!tel||!email||!intitule){
+    st.innerHTML='<span class="err">❌ Merci de remplir les champs obligatoires (*).</span>';return;}
+  if(!email.includes('@')){st.innerHTML='<span class="err">❌ Email invalide.</span>';return;}
+  if(!dates.length){st.innerHTML='<span class="err">❌ Ajoutez au moins une date souhaitée.</span>';return;}
+
+  const noms=stagiaires.map(s=>{const p=(document.getElementById('sp'+s.id)||{}).value?.trim()||'';const n=(document.getElementById('sn'+s.id)||{}).value?.trim()||'';return`${p} ${n}`.trim();}).filter(Boolean);
+
+  const message=[
+    '══════════════════════════════',
+    '   NOUVELLE DEMANDE FORMANET  ',
+    '══════════════════════════════','',
+    '🏢 ENTREPRISE',
+    `Raison sociale : ${raison}`,
+    `SIRET : ${v('c_siret')||'Non renseigné'}`,
+    `Adresse : ${v('c_adresse')||'Non renseignée'}`,
+    `Responsable : ${responsable}`,
+    `Téléphone : ${tel}`,
+    `Email : ${email}`,'',
+    '📚 FORMATION',
+    `Intitulé : ${intitule}`,
+    `Lieu : ${v('f_lieu')}`,
+    `Durée : ${v('f_heures')||'Non renseignée'}`,
+    `Horaires : ${v('f_horaires')||'Non renseignés'}`,
+    `Date(s) : ${dates.map(fmtDate).join(', ')}`,
+    `Public : ${v('f_public')||'Non renseigné'}`,
+    `Infos : ${v('f_info')||'Aucune'}`,'',
+    '👥 SALARIÉS',
+    noms.length?noms.map((n,i)=>`  ${i+1}. ${n}`).join('\n'):'  Non renseignés','',
+    '──────────────────────────────',
+    'Envoyé via FormaNet Client Form'
+  ].join('\n');
+
+  btn.disabled=true;btn.textContent='⏳ Envoi en cours...';st.innerHTML='';
+  try{
+    await emailjs.send('service_yioprya','template_i4kxo4h',{
+      from_name: responsable,
+      to_name: 'FormaNet',
+      subject: `Nouvelle demande – ${intitule} – ${raison}`,
+      message: message,
+      reply_to: email,
+      name: responsable,
+      email: email,
+      client_nom: raison,
+      to_email: 'compta.davidlabe@gmail.com',
+    });
+    st.innerHTML='<span class="ok">✅ Demande envoyée ! FormaNet vous contactera rapidement.</span>';
+    btn.textContent='✅ Envoyé !';btn.style.background='#1a8a5a';
+  }catch(e){
+    st.innerHTML=`<span class="err">❌ Erreur d'envoi. Réessayez ou contactez formanet1@gmail.com</span>`;
+    btn.disabled=false;btn.textContent='📨 Envoyer ma demande à FormaNet';
+  }
+}
+</script>
+</body>
+</html>
