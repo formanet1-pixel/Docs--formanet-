@@ -1,16 +1,110 @@
-  </div>
-  <div id="doc-body"></div>
-</div>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FormaNet – Dossier Complet</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#1a5fa8;--blue-light:#e8f0fb;--blue-mid:#2d7dd2;--gray:#f5f7fa;--border:#d0daea;--text:#2c2c3e;--muted:#7a8499;--success:#1a8a5a;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Source Sans 3',sans-serif;background:#eef2f8;color:var(--text);min-height:100vh;}
+#app-shell{display:block;}
+#doc-view{display:none;}
+header{background:var(--blue);color:white;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(26,95,168,.25);}
+header .logo{font-family:'Playfair Display',serif;font-size:22px;}
+header .logo span{color:#7ec8f7;}
+header .subtitle{font-size:12px;opacity:.75;margin-top:2px;letter-spacing:.08em;text-transform:uppercase;}
+header .badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:5px 14px;font-size:12px;}
+.container{max-width:960px;margin:0 auto;padding:32px 20px 100px;}
+.steps{display:flex;margin-bottom:32px;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.step{flex:1;padding:12px 8px;background:white;text-align:center;cursor:pointer;border-right:1px solid var(--border);font-size:11px;color:var(--muted);}
+.step:last-child{border-right:none;}
+.step.active{background:var(--blue);color:white;font-weight:600;}
+.step.done{background:var(--blue-light);color:var(--blue);}
+.step .num{font-size:15px;font-weight:700;display:block;}
+.card{background:white;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.06);padding:28px 32px;margin-bottom:20px;}
+.card h2{font-family:'Playfair Display',serif;color:var(--blue);font-size:20px;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid var(--blue-light);display:flex;align-items:center;gap:10px;}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.row.full{grid-template-columns:1fr;}
+.row.tri{grid-template-columns:1fr 1fr 1fr;}
+.field{display:flex;flex-direction:column;gap:5px;}
+label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+input,textarea,select{border:1.5px solid var(--border);border-radius:7px;padding:9px 12px;font-family:'Source Sans 3',sans-serif;font-size:14px;color:var(--text);background:var(--gray);transition:border .2s;outline:none;}
+input:focus,textarea:focus,select:focus{border-color:var(--blue);background:white;}
+textarea{resize:vertical;min-height:60px;}
+.stagiaire-block{background:var(--blue-light);border:1.5px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:12px;position:relative;}
+.stagiaire-block h4{font-size:13px;font-weight:600;color:var(--blue);margin-bottom:12px;text-transform:uppercase;}
+.btn-remove{position:absolute;top:12px;right:14px;background:none;border:none;color:#c0392b;font-size:18px;cursor:pointer;}
+.btn-add{background:var(--blue-light);border:2px dashed var(--blue-mid);color:var(--blue);border-radius:8px;padding:10px 20px;cursor:pointer;font-size:13px;font-weight:600;width:100%;margin-top:4px;}
+.dates-block{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px;}
+.date-tag{background:var(--blue);color:white;border-radius:20px;padding:4px 14px;font-size:13px;display:flex;align-items:center;gap:8px;}
+.date-tag button{background:none;border:none;color:white;cursor:pointer;font-size:14px;opacity:.7;}
+.add-date-row{display:flex;gap:10px;align-items:center;margin-top:6px;}
+.add-date-row input{flex:1;}
+.add-date-row button{background:var(--blue);color:white;border:none;border-radius:7px;padding:9px 16px;cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap;}
+.btn-primary{background:var(--blue);color:white;border:none;border-radius:9px;padding:13px 28px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Source Sans 3',sans-serif;}
+.btn-secondary{background:white;color:var(--blue);border:2px solid var(--blue);border-radius:9px;padding:11px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Source Sans 3',sans-serif;}
+.btn-actions{display:flex;gap:12px;justify-content:flex-end;margin-top:24px;}
+.summary-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:24px;}
+.summary-box{background:var(--blue-light);border-radius:10px;padding:14px 16px;}
+.summary-box .label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;font-weight:600;}
+.summary-box .value{font-size:14px;color:var(--blue);font-weight:700;margin-top:4px;}
+.docs-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.doc-item{background:var(--gray);border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;}
+.doc-item .doc-name{font-size:13px;font-weight:600;}
+.doc-item .doc-count{font-size:11px;color:var(--muted);margin-top:2px;}
+.btn-view{background:var(--blue);color:white;border:none;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;}
+.btn-print-all{background:var(--success);color:white;border:none;border-radius:9px;padding:14px 32px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Source Sans 3',sans-serif;width:100%;margin-top:16px;}
+.btn-email{background:#e8430a;color:white;border:none;border-radius:9px;padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Source Sans 3',sans-serif;white-space:nowrap;}
+.btn-email:disabled{opacity:.5;cursor:not-allowed;}
+.email-row{display:flex;gap:10px;margin-top:10px;align-items:center;}
+.email-row input{flex:1;border:1.5px solid var(--border);border-radius:7px;padding:10px 14px;font-size:14px;font-family:'Source Sans 3',sans-serif;}
+.email-status{font-size:13px;margin-top:8px;min-height:18px;font-style:italic;}
+.email-ok{color:var(--success);font-weight:600;font-style:normal;}
+.email-err{color:#c0392b;font-weight:600;font-style:normal;}
+.page-section{display:none;}
+.page-section.active{display:block;}
+.btn-exemple-fixe{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#f59e0b;color:white;border:none;border-radius:50px;padding:14px 32px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif;box-shadow:0 4px 20px rgba(245,158,11,.5);z-index:1000;white-space:nowrap;}
+.btn-exemple-fixe:hover{background:#d97706;}
+#doc-view{position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;overflow-y:auto;}
+#doc-toolbar{background:var(--blue);color:white;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:10px;position:sticky;top:0;z-index:10;}
+#doc-toolbar span{font-weight:600;font-size:14px;}
+.toolbar-btns{display:flex;gap:8px;}
+.btn-close-doc{background:white;color:var(--blue);border:none;border-radius:7px;padding:8px 18px;font-weight:700;cursor:pointer;font-size:13px;}
+.btn-clear-sigs{background:#e8430a;color:white;border:none;border-radius:7px;padding:8px 14px;font-weight:600;cursor:pointer;font-size:12px;}
+.btn-print-doc{background:#1a8a5a;color:white;border:none;border-radius:7px;padding:8px 16px;font-weight:600;cursor:pointer;font-size:12px;}
 
-<script>
-let stagiaires=[],dates=[],sidx=0;
-
-const EXEMPLES=[
-  {raison:'AFRIMART EXOTIQUES',siret:'',adresse:'15 VC Marchande Stendhal Galerie Marchande, 37000 Tours',responsable:'DAVIES Mamie',tel:'02 34 36 42 94',tel2:'07 53 04 20 17',intitule:'Initiation aux gestes de Premiers secours',heures:'7 Heures',horaires:'9h00-12h00 / 13h00-17h00',public:'Tout le personnel',materiel:'Mannequins, défibrillateur de formation, supports PDF',dates:['2026-05-26'],stagiaires:[{prenom:'Lucie',nom:'MARTIN'},{prenom:'Kevin',nom:'DUPONT'}],fo_nom:'M. ROGER',fo_siret:'97882245000018',fo_nda:'5253011 0853',fo_cout:'400,00',fo_date:'2026-04-24'},
-  {raison:'BOULANGERIE PAUL & FILS',siret:'41235678900023',adresse:'8 rue du Four, 69001 Lyon',responsable:'PAUL Henri',tel:'04 72 11 22 33',tel2:'',intitule:'Hygiène alimentaire HACCP',heures:'14 Heures',horaires:'8h30-12h30 / 13h30-17h30',public:'Personnel de production',materiel:'Supports PDF, fiches pratiques',dates:['2026-06-03','2026-06-04'],stagiaires:[{prenom:'Sophie',nom:'BERNARD'},{prenom:'Romain',nom:'CHEVALIER'},{prenom:'Amina',nom:'SLIMANI'}],fo_nom:'Mme LEFORT',fo_siret:'82345678900011',fo_nda:'1169012 4521',fo_cout:'850,00',fo_date:'2026-05-10'},
-  {raison:'GARAGE AUTOMOTO 37',siret:'55678901200045',adresse:'42 avenue de la Tranchée, 37100 Tours',responsable:'GARCIA Pedro',tel:'02 47 88 90 12',tel2:'06 12 34 56 78',intitule:'Habilitation électrique B1V BR BC',heures:'21 Heures',horaires:'8h00-12h00 / 13h00-17h00',public:'Techniciens et mécaniciens',materiel:'Bancs d\'essai, consignations, EPI',dates:['2026-06-10','2026-06-11','2026-06-12'],stagiaires:[{prenom:'Julien',nom:'PETIT'},{prenom:'Marc',nom:'LEBRUN'}],fo_nom:'M. SANTOS',fo_siret:'76543210000099',fo_nda:'4453019 8812',fo_cout:'1200,00',fo_date:'2026-05-20'},
-  {raison:'CLINIQUE SAINT-LUC',siret:'30012345600078',adresse:'21 boulevard Pasteur, 44000 Nantes',responsable:'Dr MOREAU Claire',tel:'02 40 55 66 77',tel2:'',intitule:'Gestion du stress et prévention des RPS',heures:'7 Heures',horaires:'9h00-17h00',public:'Infirmiers et aides-soignants',materiel:'Supports PowerPoint, exercices pratiques',dates:['2026-07-01'],stagiaires:[{prenom:'Inès',nom:'FONTAINE'},{prenom:'Thomas',nom:'RICHARD'},{prenom:'Céline',nom:'MOULIN'},{prenom:'David',nom:'HENRY'}],fo_nom:'Mme AUBERT',fo_siret:'65432198700032',fo_nda:'5244013 7623',fo_cout:'550,00',fo_date:'2026-06-05'},
-  {raison:'ÉCOLE PRIMAIRE LES LILAS',siret:'21345678900056',adresse:'3 impasse des Roses, 13008 Marseille',responsable:'DUP.doc-checkbox.checked{background:#1a5fa8;}
+/* ── DOC STYLES ── */
+#doc-body{padding:32px;font-family:Arial,sans-serif;font-size:12.5px;color:#222;max-width:820px;margin:0 auto;}
+#doc-body h1{color:#1a5fa8;text-align:center;font-size:17px;text-transform:uppercase;letter-spacing:.05em;border-bottom:2.5px solid #1a5fa8;padding-bottom:8px;margin-bottom:18px;}
+#doc-body h2{color:#1a5fa8;font-size:13px;margin-top:20px;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em;}
+#doc-body p{margin-bottom:8px;line-height:1.6;}
+#doc-body ul{padding-left:20px;margin-bottom:8px;}
+#doc-body ul li{line-height:1.9;}
+#doc-body table{width:100%;border-collapse:collapse;margin:10px 0;}
+#doc-body th{background:#1a5fa8;color:white;padding:7px 10px;font-size:12px;text-align:left;}
+#doc-body td{border:1px solid #ccc;padding:7px 10px;font-size:12px;}
+#doc-body .info-table td:first-child{font-weight:bold;width:35%;background:#f0f5ff;}
+#doc-body footer{text-align:center;font-size:10px;color:#888;margin-top:30px;border-top:1px solid #ddd;padding-top:8px;line-height:1.7;}
+#doc-body .page-break{border-top:3px dashed #ccc;margin:36px 0;padding-top:24px;}
+.doc-field{display:inline-block;border:none;border-bottom:1.5px dashed #1a5fa8;background:transparent;font-family:Arial,sans-serif;font-size:12.5px;color:#222;padding:2px 4px;outline:none;min-width:120px;}
+.doc-field:focus{background:#e8f0fb;border-bottom:2px solid #1a5fa8;}
+.doc-textarea{width:100%;border:1.5px dashed #1a5fa8;background:#fafcff;font-family:Arial,sans-serif;font-size:12.5px;color:#222;padding:6px 8px;outline:none;resize:vertical;min-height:50px;border-radius:4px;}
+.doc-textarea:focus{background:#e8f0fb;border-color:#1a5fa8;}
+.sig-zone{display:flex;flex-direction:column;align-items:flex-start;gap:4px;}
+.sig-label{font-size:11px;font-weight:bold;color:#1a5fa8;text-transform:uppercase;}
+.sig-canvas{border:1.5px solid #1a5fa8;border-radius:6px;background:#fafcff;cursor:crosshair;touch-action:none;}
+.sig-actions{display:flex;gap:6px;margin-top:2px;}
+.btn-sig-clear{background:#e8430a;color:white;border:none;border-radius:4px;padding:3px 10px;font-size:11px;cursor:pointer;}
+.sign-row{display:flex;justify-content:space-between;margin-top:28px;gap:24px;flex-wrap:wrap;}
+.sign-block{display:flex;flex-direction:column;gap:4px;}
+.sign-block .sign-title{font-size:11px;font-weight:bold;color:#1a5fa8;text-transform:uppercase;margin-bottom:4px;}
+.sign-block .sign-name{font-size:11px;color:#555;margin-top:4px;}
+.rating-cell{text-align:center;cursor:pointer;font-size:15px;}
+.rating-cell.selected{background:#e8f0fb;color:#1a5fa8;font-weight:bold;}
+.doc-checkbox{display:inline-block;width:13px;height:13px;border:1.5px solid #1a5fa8;border-radius:2px;background:white;cursor:pointer;vertical-align:middle;margin-right:5px;}
+.doc-checkbox.checked{background:#1a5fa8;}
 
 @media print{
   #app-shell{display:none!important;}
@@ -127,103 +221,574 @@ const EXEMPLES=[
   {raison:'BOULANGERIE PAUL & FILS',siret:'41235678900023',adresse:'8 rue du Four, 69001 Lyon',responsable:'PAUL Henri',tel:'04 72 11 22 33',tel2:'',intitule:'Hygiène alimentaire HACCP',heures:'14 Heures',horaires:'8h30-12h30 / 13h30-17h30',public:'Personnel de production',materiel:'Supports PDF, fiches pratiques',dates:['2026-06-03','2026-06-04'],stagiaires:[{prenom:'Sophie',nom:'BERNARD'},{prenom:'Romain',nom:'CHEVALIER'},{prenom:'Amina',nom:'SLIMANI'}],fo_nom:'Mme LEFORT',fo_siret:'82345678900011',fo_nda:'1169012 4521',fo_cout:'850,00',fo_date:'2026-05-10'},
   {raison:'GARAGE AUTOMOTO 37',siret:'55678901200045',adresse:'42 avenue de la Tranchée, 37100 Tours',responsable:'GARCIA Pedro',tel:'02 47 88 90 12',tel2:'06 12 34 56 78',intitule:'Habilitation électrique B1V BR BC',heures:'21 Heures',horaires:'8h00-12h00 / 13h00-17h00',public:'Techniciens et mécaniciens',materiel:'Bancs d\'essai, consignations, EPI',dates:['2026-06-10','2026-06-11','2026-06-12'],stagiaires:[{prenom:'Julien',nom:'PETIT'},{prenom:'Marc',nom:'LEBRUN'}],fo_nom:'M. SANTOS',fo_siret:'76543210000099',fo_nda:'4453019 8812',fo_cout:'1200,00',fo_date:'2026-05-20'},
   {raison:'CLINIQUE SAINT-LUC',siret:'30012345600078',adresse:'21 boulevard Pasteur, 44000 Nantes',responsable:'Dr MOREAU Claire',tel:'02 40 55 66 77',tel2:'',intitule:'Gestion du stress et prévention des RPS',heures:'7 Heures',horaires:'9h00-17h00',public:'Infirmiers et aides-soignants',materiel:'Supports PowerPoint, exercices pratiques',dates:['2026-07-01'],stagiaires:[{prenom:'Inès',nom:'FONTAINE'},{prenom:'Thomas',nom:'RICHARD'},{prenom:'Céline',nom:'MOULIN'},{prenom:'David',nom:'HENRY'}],fo_nom:'Mme AUBERT',fo_siret:'65432198700032',fo_nda:'5244013 7623',fo_cout:'550,00',fo_date:'2026-06-05'},
-  {raison:'ÉCOLE PRIMAIRE LES LILAS',siret:'21345678900056',adresse:'3 impasse des Roses, 13008 Marseille',responsable:'DUP  document.getElementById('c_raison').value=e.raison;
+  {raison:'ÉCOLE PRIMAIRE LES LILAS',siret:'21345678900056',adresse:'3 impasse des Roses, 13008 Marseille',responsable:'DUPUIS Nathalie',tel:'04 91 22 33 44',tel2:'06 98 76 54 32',intitule:'Sensibilisation à la cybersécurité',heures:'3h30',horaires:'14h00-17h30',public:'Enseignants et personnel administratif',materiel:'Vidéoprojecteur, quiz interactif',dates:['2026-06-17'],stagiaires:[{prenom:'Paul',nom:'GIRARD'},{prenom:'Marie',nom:'LECOMTE'}],fo_nom:'M. BÉNARD',fo_siret:'54321098700065',fo_nda:'1369024 3301',fo_cout:'280,00',fo_date:'2026-05-28'},
+];
+let dernierExemple=-1;
+function remplirExemple(){
+  let idx;do{idx=Math.floor(Math.random()*EXEMPLES.length);}while(idx===dernierExemple&&EXEMPLES.length>1);
+  dernierExemple=idx;
+  const e=EXEMPLES[idx];
+  document.getElementById('c_raison').value=e.raison;
   document.getElementById('c_siret').value=e.siret;
   document.getElementById('c_adresse').value=e.adresse;
   document.getElementById('c_responsable').value=e.responsable;
   document.getElementById('c_tel').value=e.tel;
-  document.getElementById('c_email').value=e.email;
+  document.getElementById('c_tel2').value=e.tel2;
   document.getElementById('f_intitule').value=e.intitule;
-  document.getElementById('f_lieu').value=e.lieu;
   document.getElementById('f_heures').value=e.heures;
   document.getElementById('f_horaires').value=e.horaires;
   document.getElementById('f_public').value=e.public;
-  document.getElementById('f_info').value=e.info;
-  dates=[...e.dates];renderDates();
-  stagiaires=[];sidx=0;document.getElementById('stagiaires').innerHTML='';
-  e.stagiaires.forEach(([p,n])=>{addStagiaire();const id=sidx-1;document.getElementById('sp'+id).value=p;document.getElementById('sn'+id).value=n;});
-  const btn=document.querySelector('button[onclick="exemple()"]');
+  document.getElementById('f_materiel').value=e.materiel;
+  dates=[...e.dates]; renderDates();
+  stagiaires=e.stagiaires.map((s,i)=>({id:i,prenom:s.prenom,nom:s.nom}));
+  sidx=stagiaires.length; renderStagiaires();
+  document.getElementById('fo_nom').value=e.fo_nom;
+  document.getElementById('fo_siret').value=e.fo_siret;
+  document.getElementById('fo_nda').value=e.fo_nda;
+  document.getElementById('fo_cout').value=e.fo_cout;
+  document.getElementById('fo_date_contrat').value=e.fo_date;
+  const btn=document.querySelector('.btn-exemple-fixe');
   btn.textContent=`✅ ${e.raison}`;btn.style.background='#1a8a5a';
-  setTimeout(()=>{btn.textContent='💡 Exemple aléatoire';btn.style.background='#f59e0b';},2500);
+  setTimeout(()=>{btn.innerHTML='💡 Exemple aléatoire';btn.style.background='';},2500);
+  goTo(0);
 }
 
-let dates=[],stagiaires=[],sidx=0;
+function goTo(n){
+  if(n===3)buildDocsPage();
+  document.querySelectorAll('.page-section').forEach((s,i)=>s.classList.toggle('active',i===n));
+  document.querySelectorAll('.step').forEach((s,i)=>{s.classList.remove('active','done');if(i<n)s.classList.add('done');if(i===n)s.classList.add('active');});
+  window.scrollTo(0,0);
+}
 
-function fmtDate(iso){if(!iso)return'';const[y,m,d]=iso.split('-');return`${d}/${m}/${y}`;}
-function addDate(){const v=document.getElementById('new-date').value;if(!v||dates.includes(v))return;dates.push(v);renderDates();document.getElementById('new-date').value='';}
+function addDate(){const val=document.getElementById('new-date').value;if(!val||dates.includes(val))return;dates.push(val);renderDates();document.getElementById('new-date').value='';}
 function removeDate(d){dates=dates.filter(x=>x!==d);renderDates();}
-function renderDates(){document.getElementById('dates-wrap').innerHTML=dates.map(d=>`<div class="date-tag">${fmtDate(d)}<button onclick="removeDate('${d}')">×</button></div>`).join('');}
-
-function addStagiaire(){
-  const id=sidx++;stagiaires.push({id});
-  const div=document.createElement('div');div.className='stagiaire';div.id='s'+id;
-  div.innerHTML=`<button class="btn-remove" onclick="removeStagiaire(${id})">×</button>
-    <h4>Salarié ${stagiaires.length}</h4>
-    <div class="row2">
-      <div class="field"><label>Prénom</label><input type="text" id="sp${id}" placeholder="Prénom"></div>
-      <div class="field"><label>Nom</label><input type="text" id="sn${id}" placeholder="NOM"></div>
-    </div>`;
-  document.getElementById('stagiaires').appendChild(div);
+function renderDates(){document.getElementById('dates-container').innerHTML=dates.map(d=>`<div class="date-tag">${fmtDate(d)}<button onclick="removeDate('${d}')">×</button></div>`).join('');}
+function fmtDate(iso){if(!iso)return'';const[y,m,d]=iso.split('-');return`${d}/${m}/${y}`;}
+function addStagiaire(){const id=sidx++;stagiaires.push({id,nom:'',prenom:''});renderStagiaires();}
+function removeStagiaire(id){stagiaires=stagiaires.filter(s=>s.id!==id);renderStagiaires();}
+function renderStagiaires(){
+  document.getElementById('stagiaires-container').innerHTML=stagiaires.map((s,i)=>`
+    <div class="stagiaire-block">
+      <button class="btn-remove" onclick="removeStagiaire(${s.id})">×</button>
+      <h4>Stagiaire ${i+1}</h4>
+      <div class="row">
+        <div class="field"><label>Prénom</label><input type="text" value="${s.prenom}" onchange="updS(${s.id},'prenom',this.value)" placeholder="Prénom"></div>
+        <div class="field"><label>Nom</label><input type="text" value="${s.nom}" onchange="updS(${s.id},'nom',this.value)" placeholder="NOM"></div>
+      </div>
+    </div>`).join('');
 }
-function removeStagiaire(id){stagiaires=stagiaires.filter(s=>s.id!==id);document.getElementById('s'+id)?.remove();renumStagiaires();}
-function renumStagiaires(){document.querySelectorAll('.stagiaire h4').forEach((h,i)=>h.textContent=`Salarié ${i+1}`);}
+function updS(id,f,val){const s=stagiaires.find(x=>x.id===id);if(s)s[f]=val;}
+function v(id){return(document.getElementById(id)||{}).value||'';}
+function getData(){
+  document.querySelectorAll('.stagiaire-block').forEach((b,i)=>{
+    const inp=b.querySelectorAll('input');
+    if(stagiaires[i]){stagiaires[i].prenom=inp[0].value;stagiaires[i].nom=inp[1].value;}
+  });
+  return{
+    client:{raison:v('c_raison'),siret:v('c_siret'),adresse:v('c_adresse'),responsable:v('c_responsable'),tel:v('c_tel'),tel2:v('c_tel2')},
+    formation:{intitule:v('f_intitule'),lieu:v('f_lieu'),heures:v('f_heures'),horaires:v('f_horaires'),dates:[...dates],public:v('f_public'),materiel:v('f_materiel'),stagiaires:stagiaires.map(s=>`${s.prenom} ${s.nom}`.trim()).filter(Boolean)},
+    formateur:{nom:v('fo_nom'),siret:v('fo_siret'),nda:v('fo_nda'),cout:v('fo_cout'),date_contrat:v('fo_date_contrat')}
+  };
+}
 
-function v(id){return(document.getElementById(id)||{}).value?.trim()||'';}
+function buildDocsPage(){
+  const d=getData();
+  const datesStr=d.formation.dates.map(fmtDate).join(', ');
+  const nS=d.formation.stagiaires.length;
+  document.getElementById('summary-box').innerHTML=`
+    <div class="summary-box"><div class="label">Client</div><div class="value">${d.client.raison||'–'}</div></div>
+    <div class="summary-box"><div class="label">Formation</div><div class="value">${d.formation.intitule||'–'}</div></div>
+    <div class="summary-box"><div class="label">Stagiaires</div><div class="value">${nS||'Sur attestations'}</div></div>
+    <div class="summary-box"><div class="label">Formateur</div><div class="value">${d.formateur.nom||'–'}</div></div>
+    <div class="summary-box"><div class="label">Date(s)</div><div class="value">${datesStr||'–'}</div></div>
+    <div class="summary-box"><div class="label">Rémunération</div><div class="value">${d.formateur.cout||'–'} €</div></div>`;
+  const docs=[
+    {name:'Contrat de mission',count:'1 doc',fn:()=>genContrat(d,datesStr)},
+    {name:'Attestation fin de formation',count:'1 doc',fn:()=>genAttestation(d,datesStr)},
+    {name:'Attestations de présence',count:`${d.formation.dates.length||1} doc(s)`,fn:()=>genPresences(d)},
+    {name:'Fiches individuelles stagiaire',count:nS?`${nS} doc(s)`:'À compléter',fn:()=>genFiches(d,datesStr)},
+    {name:'Questionnaires de satisfaction',count:nS?`${nS} doc(s)`:'À compléter',fn:()=>genQuestionnaires(d,datesStr)},
+    {name:'Compte rendu de formation',count:'1 doc',fn:()=>genCompteRendu(d,datesStr)},
+  ];
+  document.getElementById('docs-list').innerHTML=docs.map((doc,i)=>`
+    <div class="doc-item">
+      <div><div class="doc-name">📄 ${doc.name}</div><div class="doc-count">${doc.count}</div></div>
+      <button class="btn-view" onclick="viewDoc(${i})">Voir</button>
+    </div>`).join('');
+  window._docs=docs;
+}
 
-async function envoyer(){
-  const raison=v('c_raison'),responsable=v('c_responsable'),tel=v('c_tel'),email=v('c_email'),intitule=v('f_intitule');
-  const st=document.getElementById('status'),btn=document.getElementById('btn-send');
-  if(!raison||!responsable||!tel||!email||!intitule){
-    st.innerHTML='<span class="err">❌ Merci de remplir les champs obligatoires (*).</span>';return;}
-  if(!email.includes('@')){st.innerHTML='<span class="err">❌ Email invalide.</span>';return;}
-  if(!dates.length){st.innerHTML='<span class="err">❌ Ajoutez au moins une date souhaitée.</span>';return;}
+function openDoc(html,title){
+  document.getElementById('doc-body').innerHTML=html;
+  document.getElementById('doc-title-bar').textContent='📄 '+( title||'FormaNet');
+  document.getElementById('doc-view').style.display='block';
+  document.getElementById('app-shell').style.display='none';
+  window.scrollTo(0,0);
+  initAllCanvases();initRatings();initCheckboxes();
+}
+function closeDoc(){document.getElementById('doc-view').style.display='none';document.getElementById('app-shell').style.display='block';}
+function viewDoc(i){openDoc(window._docs[i].fn(),window._docs[i].name);}
+function viewAll(){openDoc(window._docs.map(d=>d.fn()).join('<div class="page-break"></div>'),'Dossier complet');}
+function clearAllSigs(){document.querySelectorAll('.sig-canvas').forEach(c=>{const ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);});}
 
-  const noms=stagiaires.map(s=>{const p=(document.getElementById('sp'+s.id)||{}).value?.trim()||'';const n=(document.getElementById('sn'+s.id)||{}).value?.trim()||'';return`${p} ${n}`.trim();}).filter(Boolean);
-
-  const message=[
-    '══════════════════════════════',
-    '   NOUVELLE DEMANDE FORMANET  ',
-    '══════════════════════════════','',
-    '🏢 ENTREPRISE',
-    `Raison sociale : ${raison}`,
-    `SIRET : ${v('c_siret')||'Non renseigné'}`,
-    `Adresse : ${v('c_adresse')||'Non renseignée'}`,
-    `Responsable : ${responsable}`,
-    `Téléphone : ${tel}`,
-    `Email : ${email}`,'',
-    '📚 FORMATION',
-    `Intitulé : ${intitule}`,
-    `Lieu : ${v('f_lieu')}`,
-    `Durée : ${v('f_heures')||'Non renseignée'}`,
-    `Horaires : ${v('f_horaires')||'Non renseignés'}`,
-    `Date(s) : ${dates.map(fmtDate).join(', ')}`,
-    `Public : ${v('f_public')||'Non renseigné'}`,
-    `Infos : ${v('f_info')||'Aucune'}`,'',
-    '👥 SALARIÉS',
-    noms.length?noms.map((n,i)=>`  ${i+1}. ${n}`).join('\n'):'  Non renseignés','',
-    '──────────────────────────────',
-    'Envoyé via FormaNet Client Form'
-  ].join('\n');
-
-  btn.disabled=true;btn.textContent='⏳ Envoi en cours...';st.innerHTML='';
-  try{
-    await emailjs.send('service_yioprya','template_i4kxo4h',{
-      from_name: responsable,
-      to_name: 'FormaNet',
-      subject: `Nouvelle demande – ${intitule} – ${raison}`,
-      message: message,
-      reply_to: email,
-      name: responsable,
-      email: email,
-      client_nom: raison,
-      to_email: 'compta.davidlabe@gmail.com',
+// CANVAS SIGNATURE
+function sigCanvasHTML(id,label,w,h){
+  w=w||220;h=h||75;
+  return`<div class="sig-zone">
+    ${label?`<div class="sig-label">${label}</div>`:''}
+    <canvas class="sig-canvas" id="${id}" width="${w}" height="${h}"></canvas>
+    <div class="sig-actions"><button class="btn-sig-clear" onclick="clearCanvas('${id}')">Effacer</button></div>
+  </div>`;}
+function clearCanvas(id){const c=document.getElementById(id);if(c)c.getContext('2d').clearRect(0,0,c.width,c.height);}
+function initAllCanvases(){
+  document.querySelectorAll('.sig-canvas').forEach(canvas=>{
+    let drawing=false,lx=0,ly=0;
+    const ctx=canvas.getContext('2d');
+    ctx.strokeStyle='#1a2a4a';ctx.lineWidth=2;ctx.lineCap='round';ctx.lineJoin='round';
+    function pos(e){const r=canvas.getBoundingClientRect();const src=e.touches?e.touches[0]:e;return{x:(src.clientX-r.left)*(canvas.width/r.width),y:(src.clientY-r.top)*(canvas.height/r.height)};}
+    canvas.addEventListener('mousedown',e=>{drawing=true;const p=pos(e);lx=p.x;ly=p.y;});
+    canvas.addEventListener('mousemove',e=>{if(!drawing)return;const p=pos(e);ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(p.x,p.y);ctx.stroke();lx=p.x;ly=p.y;});
+    canvas.addEventListener('mouseup',()=>drawing=false);
+    canvas.addEventListener('mouseleave',()=>drawing=false);
+    canvas.addEventListener('touchstart',e=>{e.preventDefault();drawing=true;const p=pos(e);lx=p.x;ly=p.y;},{passive:false});
+    canvas.addEventListener('touchmove',e=>{e.preventDefault();if(!drawing)return;const p=pos(e);ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(p.x,p.y);ctx.stroke();lx=p.x;ly=p.y;},{passive:false});
+    canvas.addEventListener('touchend',()=>drawing=false);
+  });
+}
+function initRatings(){
+  document.querySelectorAll('.rating-cell[data-group]').forEach(cell=>{
+    cell.addEventListener('click',()=>{
+      const g=cell.dataset.group;
+      document.querySelectorAll(`.rating-cell[data-group="${g}"]`).forEach(c=>c.classList.remove('selected'));
+      cell.classList.add('selected');
     });
-    st.innerHTML='<span class="ok">✅ Demande envoyée ! FormaNet vous contactera rapidement.</span>';
-    btn.textContent='✅ Envoyé !';btn.style.background='#1a8a5a';
-  }catch(e){
-    st.innerHTML=`<span class="err">❌ Erreur d'envoi. Réessayez ou contactez formanet1@gmail.com</span>`;
-    btn.disabled=false;btn.textContent='📨 Envoyer ma demande à FormaNet';
-  }
+  });
+}
+function initCheckboxes(){
+  document.querySelectorAll('.doc-checkbox').forEach(cb=>{
+    cb.addEventListener('click',()=>{
+      cb.classList.toggle('checked');
+      cb.style.background=cb.classList.contains('checked')?'#1a5fa8':'white';
+    });
+  });
+}
+function cb(label){return`<span style="display:inline-flex;align-items:center;gap:4px;cursor:pointer;"><span class="doc-checkbox" style="flex-shrink:0;display:inline-block;width:13px;height:13px;border:1.5px solid #1a5fa8;border-radius:2px;background:white;cursor:pointer;vertical-align:middle;"></span>${label}</span>`;}
+function eF(ph,w){return`<input class="doc-field" type="text" placeholder="${ph}" style="min-width:${w||100}px;">`;}
+
+function footer(){
+  return`<footer>
+    FORMANET | 54 Avenue Philippe Auguste 75011 Paris (France) | SIRET : 519 393 920 00011<br>
+    N° Déclaration d'activité : 11754515675 | Tél : 01.78.90.03.40 | formanet1@gmail.com | formanet.fr
+  </footer>`;}
+
+// ════════════════════════════════════════════════
+//  CONTRAT DE MISSION – conforme au modèle PDF
+// ════════════════════════════════════════════════
+function genContrat(d,datesStr){
+  const stagiairesMention = d.formation.stagiaires.length
+    ? d.formation.stagiaires.join(', ')
+    : 'Mentionnés sur les attestations de présence.';
+  const contactTel = [d.client.tel,d.client.tel2].filter(Boolean).join(' / ');
+  const dateContrat = d.formateur.date_contrat ? fmtDate(d.formateur.date_contrat) : eF('JJ/MM/AAAA',90);
+
+  return`
+<p style="text-align:right;font-size:11px;color:#888;margin-bottom:4px;">1/2</p>
+<h1>Contrat de Mission</h1>
+
+<p>Entre les soussignés :</p>
+<p>Le donneur d'ordre, la société <strong>FORMANET</strong>, SIRET 519 393 920 00011 – numéro de déclaration d'activité 1175 451 5675, représentée par <strong>M. Labé</strong>, agissant en qualité de gérant, d'une part,</p>
+<p>et le sous-traitant <strong>${d.formateur.nom||eF('Nom du formateur',160)}</strong>, SIRET <strong>${d.formateur.siret||eF('SIRET',130)}</strong><br>
+Numéro de déclaration d'activité : <strong>${d.formateur.nda||eF('N° déclaration',130)}</strong>,</p>
+<p>d'autre part, il a été convenu ce qui suit :</p>
+
+<h2>Article 1<sup>er</sup> : Nature du contrat</h2>
+<p>Le présent contrat est conclu dans le cadre d'une prestation de formation ponctuelle réalisée par le sous-traitant au bénéfice du donneur d'ordre, sous réserve de l'accord de prise en charge de la formation.</p>
+
+<h2>Article 2 : Objet du contrat</h2>
+<table class="info-table">
+  <tr><td>Formation</td><td>${d.formation.intitule||eF('Intitulé de la formation',200)}</td></tr>
+  <tr><td>Effectifs</td><td>${d.formation.stagiaires.length||eF('Nombre',60)}</td></tr>
+  <tr><td>Date</td><td>${datesStr||eF('Date(s)',140)}</td></tr>
+  <tr><td>Nombre d'heures</td><td>${d.formation.heures||eF('Durée',100)}</td></tr>
+  <tr><td>Lieu de la formation</td><td>${d.formation.lieu}</td></tr>
+  <tr><td>Contact</td><td>${d.client.raison} – ${d.client.adresse}<br>${d.client.responsable}${contactTel?' – '+contactTel:''}</td></tr>
+  <tr><td>Noms des salarié(es)</td><td>${stagiairesMention}</td></tr>
+</table>
+
+<h2>Article 3 : Durée du contrat</h2>
+<p>Le présent contrat est strictement limité à la prestation de formation visée à l'article 2. Il cesse de plein droit à son terme.</p>
+
+<h2>Article 4 : Obligations du sous-traitant</h2>
+<p>Pour le bon déroulé de la formation, le sous-traitant s'engage à :</p>
+<ul>
+  <li><strong>4.1-A</strong> – Confirmer les dates de formation avec le client au préalable ainsi que la faisabilité de la réalisation de la formation.</li>
+  <li><strong>4.1</strong> – Communiquer au donneur d'ordre une copie de son extrait K-bis.</li>
+  <li><strong>4.2</strong> – Animer la formation dans le respect de l'entreprise ainsi que dans le respect des heures prévues à l'article 2.</li>
+  <li><strong>4.2 Bis</strong> – Animer la formation dans le respect des normes réglementaires Qualiopi.</li>
+  <li><strong>4.3</strong> – Animer personnellement la formation, sauf en cas de situation exceptionnelle et uniquement après accord du donneur d'ordre.</li>
+  <li><strong>4.4</strong> – Évaluer les connaissances de chaque stagiaire en leur faisant remplir un questionnaire.</li>
+  <li><strong>4.5</strong> – Faire remplir par les stagiaires le questionnaire de satisfaction en fin de formation.</li>
+  <li><strong>4.6</strong> – Faire signer les attestations de présence.</li>
+</ul>
+
+<p style="text-align:right;font-size:11px;color:#888;margin-top:10px;">2/2</p>
+<ul>
+  <li><strong>4.7</strong> – Établir un compte rendu de la formation.</li>
+  <li><strong>4.8</strong> – Remettre les attestations de fin de formation nominatives à chaque participant.</li>
+  <li><strong>4.9</strong> – Fournir, si besoin, le matériel (projecteur, tableau, photocopie de support…) en informant le donneur d'ordre avant signature de ce contrat.${d.formation.materiel?'<br><em>Matériel prévu : '+d.formation.materiel+'</em>':''}</li>
+  <li><strong>4.10</strong> – Participer aux réunions et aux mises à jour, si besoin est, afin de mener à terme la réalisation de cette formation.</li>
+  <li><strong>4.11</strong> – Ne jamais trouver un accord avec l'entreprise mentionnée à l'article 2, d'aucune sorte, sans passer préalablement par le donneur d'ordre.</li>
+  <li><strong>4.11 Bis</strong> – Accepte une « clause de non-concurrence » d'une durée limitée de cinq ans interdisant au formateur de proposer ses services directement aux clients représentés à l'article 2 sous peine d'une amende forfaitaire de <strong>5 000 €</strong>.</li>
+  <li><strong>4.12</strong> – Interdiction de sous-traiter tout ou partie de la mission sans accord écrit du donneur d'ordre.</li>
+  <li><strong>4.13</strong> – Engagement de conformité : respecter l'ensemble des obligations légales et réglementaires applicables à la formation professionnelle.</li>
+</ul>
+
+<h2>Article 5 : Obligations du donneur d'ordre</h2>
+<p>Le donneur d'ordre s'engage à :</p>
+<ul>
+  <li><strong>5.1</strong> – Confier au sous-traitant la formation prévue à l'article 2.</li>
+  <li><strong>5.2</strong> – Prendre en charge la gestion administrative et logistique de la formation.</li>
+  <li><strong>5.3</strong> – Communiquer les éléments mentionnés à l'article 4.4, 4.5, 4.6.</li>
+  <li><strong>5.4</strong> – Prévenir le sous-traitant en cas d'annulation ou de report de la formation.</li>
+</ul>
+
+<h2>Article 6 : Modalités financières</h2>
+<p>Le sous-traitant percevra une rémunération de <strong>${d.formateur.cout||eF('Montant',80)} € net</strong> pour la mission mentionnée à l'article 2.</p>
+<p>Le paiement sera effectué uniquement à réception de la facture et de tous les éléments mentionnés à l'article 4.4, 4.5, 4.6, 4.7 et 4.8.</p>
+
+<h2>Article 7 : Annulation</h2>
+<p>En cas d'annulation de cette mission, le donneur d'ordre s'engage à rembourser les frais de déplacement engagés pour celle-ci.</p>
+
+<p style="margin-top:20px;">Fait le <strong>${dateContrat}</strong></p>
+<div class="sign-row">
+  <div class="sign-block">
+    <div class="sign-title">Signature du donneur d'ordre</div>
+    ${sigCanvasHTML('sig_contrat_do','M. Labé – FORMANET')}
+  </div>
+  <div class="sign-block">
+    <div class="sign-title">Signature du sous-traitant</div>
+    ${sigCanvasHTML('sig_contrat_st',d.formateur.nom||'Le formateur')}
+  </div>
+</div>
+${footer()}`;}
+
+// ════════════════════════════════════════════════
+//  ATTESTATION FIN DE FORMATION
+// ════════════════════════════════════════════════
+function genAttestation(d,datesStr){
+  return`<h1>Attestation de Fin de Formation</h1>
+<p style="text-align:center;font-style:italic;margin-bottom:16px;">(art. L6353-1 du Code du travail)</p>
+<p>Je soussigné, <strong>Monsieur Labé David</strong>, responsable de l'organisme <strong>Formanet</strong> N° 11754515675, atteste que :</p>
+<table><tr><th>Stagiaire(s)</th><th>Formation</th><th>Entreprise</th></tr>
+<tr>
+  <td>${d.formation.stagiaires.length?d.formation.stagiaires.map(n=>`• ${n}`).join('<br>'):'<em>Voir attestations de présence</em>'}</td>
+  <td>${d.formation.intitule}</td>
+  <td>${d.client.raison}<br>${d.client.adresse}${d.client.siret?'<br>SIRET : '+d.client.siret:''}</td>
+</tr></table>
+<h2>Modalités</h2>
+<table class="info-table">
+  <tr><td>Date(s)</td><td>${datesStr}</td></tr>
+  <tr><td>Durée</td><td>${d.formation.heures}</td></tr>
+  <tr><td>Lieu</td><td>${d.formation.lieu}</td></tr>
+  <tr><td>Formateur</td><td>${d.formateur.nom}</td></tr>
+</table>
+<h2>Résultats et observations</h2>
+<textarea class="doc-textarea" placeholder="Résultats, objectifs atteints, observations..." rows="4"></textarea>
+<p style="margin-top:18px;">Fait à ${eF('Ville',100)}, le ${eF('Date',90)}</p>
+<div class="sign-row">
+  <div class="sign-block">
+    <div class="sign-title">Le responsable de formation</div>
+    ${sigCanvasHTML('sig_attest_do','M. Labé David – FORMANET')}
+  </div>
+</div>
+${footer()}`;}
+
+// ════════════════════════════════════════════════
+//  ATTESTATIONS DE PRÉSENCE
+// ════════════════════════════════════════════════
+function genPresences(d){
+  const dList=d.formation.dates.length?d.formation.dates:[''];
+  return dList.map((date,di)=>`
+<h1>Attestation de Présence</h1>
+<table class="info-table">
+  <tr><td>Société</td><td><strong>${d.client.raison}</strong></td></tr>
+  <tr><td>Adresse</td><td>${d.client.adresse}</td></tr>
+  <tr><td>Responsable</td><td>${d.client.responsable}${d.client.tel?' – '+d.client.tel:''}${d.client.tel2?' / '+d.client.tel2:''}</td></tr>
+  <tr><td>Formation</td><td>${d.formation.intitule}</td></tr>
+  <tr><td>Lieu</td><td>${d.formation.lieu}</td></tr>
+  <tr><td>Date</td><td><strong>${date?fmtDate(date):eF('Date',90)}</strong></td></tr>
+  <tr><td>Durée</td><td>${d.formation.heures}</td></tr>
+  <tr><td>Horaires</td><td>${d.formation.horaires||eF('Horaires',120)}</td></tr>
+  <tr><td>Formateur</td><td>${d.formateur.nom}</td></tr>
+</table>
+<table style="margin-top:16px;">
+  <tr><th>Nom & Prénom</th><th>Horaires</th><th style="width:140px;">Signature stagiaire</th><th style="width:140px;">Signature formateur</th></tr>
+  ${(d.formation.stagiaires.length
+    ? d.formation.stagiaires.map((nom,si)=>`<tr>
+        <td>${nom}</td>
+        <td>${d.formation.horaires||''}</td>
+        <td style="padding:4px;">${sigCanvasHTML(`sig_sp_${di}_${si}`,'',130,55)}</td>
+        <td style="padding:4px;">${sigCanvasHTML(`sig_fp_${di}_${si}`,'',130,55)}</td>
+      </tr>`).join('')
+    : `<tr><td>${eF('Nom Prénom',160)}</td><td>${d.formation.horaires||''}</td><td style="padding:4px;">${sigCanvasHTML(`sig_sp_${di}_0`,'',130,55)}</td><td style="padding:4px;">${sigCanvasHTML(`sig_fp_${di}_0`,'',130,55)}</td></tr>
+       <tr><td>${eF('Nom Prénom',160)}</td><td>${d.formation.horaires||''}</td><td style="padding:4px;">${sigCanvasHTML(`sig_sp_${di}_1`,'',130,55)}</td><td style="padding:4px;">${sigCanvasHTML(`sig_fp_${di}_1`,'',130,55)}</td></tr>
+       <tr><td>${eF('Nom Prénom',160)}</td><td>${d.formation.horaires||''}</td><td style="padding:4px;">${sigCanvasHTML(`sig_sp_${di}_2`,'',130,55)}</td><td style="padding:4px;">${sigCanvasHTML(`sig_fp_${di}_2`,'',130,55)}</td></tr>`
+  )}
+</table>
+<p style="margin-top:16px;">Fait le ${date?fmtDate(date):eF('Date',90)}</p>
+<div class="sign-row">
+  <div class="sign-block"><div class="sign-title">Cachet & signature entreprise</div><div class="sign-name">${d.client.responsable}</div>${sigCanvasHTML(`sig_cachet_ent_${di}`,'',180,65)}</div>
+  <div class="sign-block"><div class="sign-title">Cachet & signature formateur</div><div class="sign-name">${d.formateur.nom}</div>${sigCanvasHTML(`sig_cachet_fo_${di}`,'',180,65)}</div>
+</div>
+${footer()}${di<dList.length-1?'<div class="page-break"></div>':''}`).join('');}
+
+// ════════════════════════════════════════════════
+//  FICHES INDIVIDUELLES STAGIAIRES
+// ════════════════════════════════════════════════
+function genFiches(d,datesStr){
+  const list=d.formation.stagiaires.length?d.formation.stagiaires:[''];
+  return list.map((nom,si)=>`
+<h1>Fiche Individuelle Stagiaire</h1>
+<table class="info-table">
+  <tr><td>Formation</td><td>${d.formation.intitule}</td></tr>
+  <tr><td>Entreprise</td><td>${d.client.raison}</td></tr>
+  <tr><td>Date(s)</td><td>${datesStr}</td></tr>
+  <tr><td>Nom & Prénom</td><td><strong>${nom||eF('Nom Prénom',200)}</strong></td></tr>
+  <tr><td>Téléphone</td><td>${eF('Téléphone',150)}</td></tr>
+  <tr><td>Email</td><td>${eF('Email professionnel',200)}</td></tr>
+  <tr><td>Poste occupé</td><td>${eF('Intitulé du poste',200)}</td></tr>
+</table>
+<h2>Expérience préalable dans le domaine</h2>
+<textarea class="doc-textarea" placeholder="Décrivez votre expérience..." rows="3"></textarea>
+<h2>Objectifs et attentes pour cette formation</h2>
+<textarea class="doc-textarea" placeholder="Quels sont vos objectifs ?" rows="3"></textarea>
+<h2>Personne en Situation de Handicap (PSH)</h2>
+<p>${cb('Oui')}&nbsp;&nbsp;${cb('Non')}&nbsp;&nbsp; Si oui, précisez : ${eF('Nature du handicap',180)}</p>
+<div class="sign-row" style="margin-top:24px;">
+  <div class="sign-block"><div class="sign-title">Signature du stagiaire</div><div class="sign-name">${nom}</div>${sigCanvasHTML('sig_fiche_'+si,'',200,70)}</div>
+</div>
+${footer()}${si<list.length-1?'<div class="page-break"></div>':''}`).join('');}
+
+// ════════════════════════════════════════════════
+//  QUESTIONNAIRES DE SATISFACTION
+// ════════════════════════════════════════════════
+function genQuestionnaires(d,datesStr){
+  const criteres=[
+    {section:'1. Accueil & Organisation',items:['Accueil','Organisation générale','Lieu et matériel','Respect des horaires']},
+    {section:'2. Contenu pédagogique',items:['Clarté du contenu','Adéquation aux besoins','Équilibre théorie/pratique','Supports pédagogiques']},
+    {section:'3. Formateur',items:["Clarté des explications","Réponse aux questions","Dynamisme","Adaptation au groupe"]},
+  ];
+  const list=d.formation.stagiaires.length?d.formation.stagiaires:[''];
+  return list.map((nom,si)=>`
+<h1>Questionnaire de Satisfaction</h1>
+<table class="info-table">
+  <tr><td>Formation</td><td>${d.formation.intitule}</td></tr>
+  <tr><td>Date(s)</td><td>${datesStr}</td></tr>
+  <tr><td>Formateur</td><td>${d.formateur.nom}</td></tr>
+  <tr><td>Stagiaire</td><td><strong>${nom||eF('Nom Prénom',200)}</strong></td></tr>
+</table>
+${criteres.map((sec,secIdx)=>`
+<h2>${sec.section}</h2>
+<table>
+  <tr><th>Critère</th><th>Très bien</th><th>Bien</th><th>Moyen</th><th>Insuffisant</th></tr>
+  ${sec.items.map((c,ci)=>{const g=`g_${si}_${secIdx}_${ci}`;return`<tr><td>${c}</td>
+    ${['TB','B','M','I'].map(r=>`<td class="rating-cell" data-group="${g}" style="text-align:center;">○</td>`).join('')}
+  </tr>`;}).join('')}
+</table>`).join('')}
+<h2>4. Note globale (cliquez pour noter)</h2>
+<table><tr>${[1,2,3,4,5,6,7,8,9,10].map(n=>`<td class="rating-cell" data-group="note_${si}" style="text-align:center;font-weight:bold;">${n}</td>`).join('')}</tr></table>
+<p style="margin-top:10px;">Recommanderiez-vous cette formation ?&nbsp;&nbsp;${cb('Oui')}&nbsp;&nbsp;${cb('Non')}&nbsp;&nbsp;${cb('Peut-être')}</p>
+<h2>Commentaires libres</h2>
+<textarea class="doc-textarea" placeholder="Remarques, suggestions..." rows="3"></textarea>
+<div class="sign-row" style="margin-top:16px;">
+  <div class="sign-block"><div class="sign-title">Signature</div><div class="sign-name">${nom}</div>${sigCanvasHTML('sig_sat_'+si,'',200,65)}</div>
+</div>
+${footer()}${si<list.length-1?'<div class="page-break"></div>':''}`).join('');}
+
+// ════════════════════════════════════════════════
+//  COMPTE RENDU DE FORMATION
+// ════════════════════════════════════════════════
+function genCompteRendu(d,datesStr){
+  return`<h1>Compte Rendu de Formation</h1>
+<table class="info-table">
+  <tr><td>Formation</td><td>${d.formation.intitule}</td></tr>
+  <tr><td>Client</td><td>${d.client.raison} – ${d.client.adresse}</td></tr>
+  <tr><td>Date(s)</td><td>${datesStr}</td></tr>
+  <tr><td>Durée</td><td>${d.formation.heures}</td></tr>
+  <tr><td>Lieu</td><td>${d.formation.lieu}</td></tr>
+  <tr><td>Formateur</td><td>${d.formateur.nom}</td></tr>
+  <tr><td>Nb stagiaires</td><td>${d.formation.stagiaires.length||eF('Nombre',60)}</td></tr>
+</table>
+<h2>Déroulement de la formation</h2>
+<textarea class="doc-textarea" placeholder="Décrivez le déroulement général..." rows="4"></textarea>
+<h2>Points positifs</h2>
+<textarea class="doc-textarea" placeholder="Ce qui a bien fonctionné..." rows="3"></textarea>
+<h2>Points à améliorer</h2>
+<textarea class="doc-textarea" placeholder="Difficultés rencontrées, axes d'amélioration..." rows="3"></textarea>
+<h2>Recommandations</h2>
+<textarea class="doc-textarea" placeholder="Suggestions pour les prochaines sessions..." rows="3"></textarea>
+<h2>Évaluation globale</h2>
+<p>${cb('Très satisfaisante')}&nbsp;&nbsp;${cb('Satisfaisante')}&nbsp;&nbsp;${cb('Moyennement satisfaisante')}&nbsp;&nbsp;${cb('À améliorer')}</p>
+<p style="margin-top:18px;">Fait à ${eF('Ville',100)}, le ${eF('Date',90)}</p>
+<div class="sign-row">
+  <div class="sign-block"><div class="sign-title">Signature du formateur</div><div class="sign-name">${d.formateur.nom}</div>${sigCanvasHTML('sig_cr_fo','',200,70)}</div>
+  <div class="sign-block"><div class="sign-title">Visa FORMANET</div><div class="sign-name">M. Labé David</div>${sigCanvasHTML('sig_cr_do','',200,70)}</div>
+</div>
+${footer()}`;}
+
+// ════════════════════════════════════════════════
+//  TÉLÉCHARGEMENT HTML
+// ════════════════════════════════════════════════
+function downloadHTML(){
+  const d=getData();
+  const datesStr=d.formation.dates.map(fmtDate).join(', ');
+  const allDocs=window._docs.map(doc=>doc.fn()).join('<div style="page-break-after:always;border-top:3px dashed #ccc;margin:36px 0;padding-top:24px;"></div>');
+  const html=`<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8">
+<title>Dossier Formation – ${d.formation.intitule} – ${d.client.raison}</title>
+<style>
+body{font-family:Arial,sans-serif;font-size:12.5px;color:#222;max-width:820px;margin:0 auto;padding:32px;}
+h1{color:#1a5fa8;text-align:center;font-size:17px;text-transform:uppercase;border-bottom:2.5px solid #1a5fa8;padding-bottom:8px;margin-bottom:18px;}
+h2{color:#1a5fa8;font-size:13px;margin-top:20px;margin-bottom:6px;text-transform:uppercase;}
+p{margin-bottom:8px;line-height:1.6;}ul{padding-left:20px;margin-bottom:8px;}ul li{line-height:1.9;}
+table{width:100%;border-collapse:collapse;margin:10px 0;}
+th{background:#1a5fa8;color:white;padding:7px 10px;font-size:12px;text-align:left;}
+td{border:1px solid #ccc;padding:7px 10px;font-size:12px;}
+.info-table td:first-child{font-weight:bold;width:35%;background:#f0f5ff;}
+footer{text-align:center;font-size:10px;color:#888;margin-top:30px;border-top:1px solid #ddd;padding-top:8px;line-height:1.7;}
+.doc-field{display:inline-block;border:none;border-bottom:1.5px dashed #1a5fa8;background:transparent;font-size:12.5px;color:#222;padding:2px 4px;outline:none;min-width:120px;}
+.doc-field:focus{background:#e8f0fb;}
+.doc-textarea{width:100%;border:1.5px dashed #1a5fa8;background:#fafcff;font-size:12.5px;color:#222;padding:6px 8px;outline:none;resize:vertical;min-height:50px;border-radius:4px;}
+.sig-zone{display:flex;flex-direction:column;gap:4px;}
+.sig-label{font-size:11px;font-weight:bold;color:#1a5fa8;text-transform:uppercase;}
+.sig-canvas{border:1.5px solid #1a5fa8;border-radius:6px;background:#fafcff;cursor:crosshair;touch-action:none;}
+.sig-actions button{background:#e8430a;color:white;border:none;border-radius:4px;padding:3px 10px;font-size:11px;cursor:pointer;margin-top:2px;}
+.sign-row{display:flex;justify-content:space-between;margin-top:28px;gap:24px;flex-wrap:wrap;}
+.sign-block{display:flex;flex-direction:column;gap:4px;}
+.sign-block .sign-title{font-size:11px;font-weight:bold;color:#1a5fa8;text-transform:uppercase;margin-bottom:4px;}
+.sign-block .sign-name{font-size:11px;color:#555;margin-top:4px;}
+.rating-cell{text-align:center;cursor:pointer;font-size:15px;}
+.rating-cell.selected{background:#e8f0fb;color:#1a5fa8;font-weight:bold;}
+.doc-checkbox{display:inline-block;width:13px;height:13px;border:1.5px solid #1a5fa8;border-radius:2px;background:white;cursor:pointer;vertical-align:middle;margin-right:5px;}
+.doc-checkbox.checked{background:#1a5fa8;}
+@media print{.sig-actions{display:none!important;}}
+</style></head>
+<body>
+<div style="background:#1a5fa8;color:white;padding:16px 24px;margin-bottom:24px;border-radius:8px;">
+  <strong style="font-size:18px;">FormaNet – Dossier de Formation</strong><br>
+  <span style="font-size:13px;opacity:.85;">${d.formation.intitule} | ${d.client.raison} | ${datesStr}</span>
+</div>
+${allDocs}
+<script>
+document.querySelectorAll('.sig-canvas').forEach(canvas=>{
+  let drawing=false,lx=0,ly=0;
+  const ctx=canvas.getContext('2d');
+  ctx.strokeStyle='#1a2a4a';ctx.lineWidth=2;ctx.lineCap='round';ctx.lineJoin='round';
+  function pos(e){const r=canvas.getBoundingClientRect();const src=e.touches?e.touches[0]:e;return{x:(src.clientX-r.left)*(canvas.width/r.width),y:(src.clientY-r.top)*(canvas.height/r.height)};}
+  canvas.addEventListener('mousedown',e=>{drawing=true;const p=pos(e);lx=p.x;ly=p.y;});
+  canvas.addEventListener('mousemove',e=>{if(!drawing)return;const p=pos(e);ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(p.x,p.y);ctx.stroke();lx=p.x;ly=p.y;});
+  canvas.addEventListener('mouseup',()=>drawing=false);
+  canvas.addEventListener('mouseleave',()=>drawing=false);
+  canvas.addEventListener('touchstart',e=>{e.preventDefault();drawing=true;const p=pos(e);lx=p.x;ly=p.y;},{passive:false});
+  canvas.addEventListener('touchmove',e=>{e.preventDefault();if(!drawing)return;const p=pos(e);ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(p.x,p.y);ctx.stroke();lx=p.x;ly=p.y;},{passive:false});
+  canvas.addEventListener('touchend',()=>drawing=false);
+});
+document.querySelectorAll('.rating-cell[data-group]').forEach(cell=>{
+  cell.addEventListener('click',()=>{
+    const g=cell.dataset.group;
+    document.querySelectorAll('.rating-cell[data-group="'+g+'"]').forEach(c=>c.classList.remove('selected'));
+    cell.classList.add('selected');
+  });
+});
+document.querySelectorAll('.doc-checkbox').forEach(cb=>{
+  cb.addEventListener('click',()=>{cb.classList.toggle('checked');cb.style.background=cb.classList.contains('checked')?'#1a5fa8':'white';});
+});
+function clearCanvas(id){const c=document.getElementById(id);if(c)c.getContext('2d').clearRect(0,0,c.width,c.height);}
+<\/script>
+</body></html>`;
+  const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`Dossier_FormaNet_${(d.client.raison||'client').replace(/\s+/g,'_')}_${(d.formation.intitule||'formation').replace(/\s+/g,'_')}.html`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ════════════════════════════════════════════════
+//  TÉLÉCHARGEMENT PDF via impression navigateur
+// ════════════════════════════════════════════════
+function downloadPDF(){
+  const d=getData();
+  const datesStr=d.formation.dates.map(fmtDate).join(', ');
+  // Ouvre une nouvelle fenêtre optimisée pour l'impression PDF
+  const allDocs=window._docs.map(doc=>doc.fn()).join('<div style="page-break-after:always;"></div>');
+  const win=window.open('','_blank');
+  win.document.write(`<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8">
+<title>Dossier Formation – ${d.formation.intitule}</title>
+<style>
+@page{margin:18mm 14mm;}
+body{font-family:Arial,sans-serif;font-size:11.5px;color:#222;max-width:100%;}
+h1{color:#1a5fa8;text-align:center;font-size:16px;text-transform:uppercase;border-bottom:2.5px solid #1a5fa8;padding-bottom:7px;margin-bottom:16px;}
+h2{color:#1a5fa8;font-size:12px;margin-top:18px;margin-bottom:5px;text-transform:uppercase;}
+p{margin-bottom:7px;line-height:1.55;}ul{padding-left:18px;margin-bottom:7px;}ul li{line-height:1.85;}
+table{width:100%;border-collapse:collapse;margin:9px 0;}
+th{background:#1a5fa8;color:white;padding:6px 9px;font-size:11px;text-align:left;}
+td{border:1px solid #ccc;padding:6px 9px;font-size:11px;}
+.info-table td:first-child{font-weight:bold;width:35%;background:#f0f5ff;}
+footer{text-align:center;font-size:9.5px;color:#888;margin-top:24px;border-top:1px solid #ddd;padding-top:7px;line-height:1.6;}
+.doc-field{border:none;border-bottom:1px dashed #1a5fa8;background:transparent;font-size:11.5px;min-width:100px;padding:1px 3px;}
+.doc-textarea{width:100%;border:1px dashed #1a5fa8;background:#fafcff;font-size:11.5px;padding:5px 7px;min-height:45px;border-radius:3px;}
+.sig-canvas{border:1.5px solid #1a5fa8;border-radius:4px;background:#f8faff;}
+.sig-actions{display:none!important;}
+.sign-row{display:flex;justify-content:space-between;margin-top:24px;gap:20px;flex-wrap:wrap;}
+.sign-block .sign-title{font-size:10px;font-weight:bold;color:#1a5fa8;text-transform:uppercase;margin-bottom:3px;}
+.sign-block .sign-name{font-size:10px;color:#555;margin-top:3px;}
+.rating-cell{text-align:center;font-size:14px;}
+.rating-cell.selected{background:#e8f0fb;color:#1a5fa8;font-weight:bold;}
+.doc-checkbox{display:inline-block;width:12px;height:12px;border:1.5px solid #1a5fa8;border-radius:2px;background:white;vertical-align:middle;margin-right:4px;}
+.doc-checkbox.checked{background:#1a5fa8;}
+.no-print{display:none!important;}
+</style></head>
+<body>
+${allDocs}
+<script>window.onload=function(){window.print();window.onafterprint=function(){window.close();};};<\/script>
+</body></html>`);
+  win.document.close();
+}
+
+// ════════════════════════════════════════════════
+//  EMAIL
+// ════════════════════════════════════════════════
+const EJS_SERVICE='service_yioprya',EJS_TEMPLATE='8ay17j7',EJS_KEY='qqtPEVbaXroAvc5mP';
+async function sendEmail(){
+  const email=document.getElementById('dest-email').value.trim();
+  const st=document.getElementById('email-status'),btn=document.getElementById('btn-send-email');
+  if(!email||!email.includes('@')){st.innerHTML='<span style="color:#c0392b;font-weight:600;">❌ Email invalide.</span>';return;}
+  btn.disabled=true;btn.textContent='Envoi...';st.textContent='⏳ Envoi en cours...';
+  const d=getData();
+  const datesStr=d.formation.dates.map(fmtDate).join(', ');
+  const message=[
+    `=== DOSSIER FORMATION FORMANET ===`,'',
+    `CLIENT : ${d.client.raison}`,`SIRET : ${d.client.siret}`,
+    `Adresse : ${d.client.adresse}`,`Responsable : ${d.client.responsable} | Tél : ${d.client.tel}${d.client.tel2?' / '+d.client.tel2:''}`,``,
+    `FORMATION : ${d.formation.intitule}`,`Durée : ${d.formation.heures} | Lieu : ${d.formation.lieu}`,
+    `Dates : ${datesStr}`,`Horaires : ${d.formation.horaires}`,``,
+    `STAGIAIRES :`, ...(d.formation.stagiaires.length?d.formation.stagiaires.map((n,i)=>`  ${i+1}. ${n}`):['  Non renseignés']),``,
+    `FORMATEUR : ${d.formateur.nom}`,`SIRET : ${d.formateur.siret} | NDA : ${d.formateur.nda} | Rémunération : ${d.formateur.cout} € net`,``,
+    `---`,`Généré par FormaNet | formanet.fr`
+  ].join('\n');
+  try{
+    const res=await fetch('https://api.emailjs.com/api/v1.0/email/send',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({service_id:EJS_SERVICE,template_id:EJS_TEMPLATE,user_id:EJS_KEY,
+        template_params:{to_email:email,subject:`Dossier Formation FormaNet – ${d.formation.intitule}`,message,name:'FormaNet'}})
+    });
+    if(res.ok){st.innerHTML=`<span style="color:#1a8a5a;font-weight:600;">✅ Envoyé à ${email} !</span>`;}
+    else{const t=await res.text();st.innerHTML=`<span style="color:#c0392b;font-weight:600;">❌ Erreur : ${t}</span>`;}
+  }catch(e){st.innerHTML=`<span style="color:#c0392b;font-weight:600;">❌ ${e.message}</span>`;}
+  btn.disabled=false;btn.textContent='Envoyer';
 }
 </script>
 </body>
